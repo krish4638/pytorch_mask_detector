@@ -3,12 +3,12 @@ from torchvision import transforms
 from PIL import Image
 
 
-filepath = './mask_model_resnet101.pth'
-model = torch.load(filepath, map_location='cpu')
+model = torch.hub.load_state_dict_from_url('https://vamshi4638.s3.amazonaws.com/mask_model_resnet101.pth', map_location='cpu')
 class_names = ['with_mask', 'without_mask']
 
 
 def process_image(image):
+    print('[INFO] preprocess')
     pil_image = Image.open(image)
     image_transforms = transforms.Compose([
         transforms.Resize(256),
@@ -21,15 +21,16 @@ def process_image(image):
 
 
 def classify_face(image):
+    print("[INFO] classification")
     img = process_image(image)
     img = img.unsqueeze_(0)
     img = img.float()
     model.eval()
     output = model(img)
     _, predicted = torch.max(output, 1)
-    print(predicted)
     classification1 = predicted.data[0]
     index = int(classification1)
+    print('[INFO] label: ', class_names[index])
     return class_names[index]
 
 if __name__ == '__main__':
