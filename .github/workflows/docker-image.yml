@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Docker Login
+      run: docker login -u ${{ secrets.DOCKER_ID }} -P ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_ID }}/pytorch_mask_detector:latest
+    - name: Push docker image to docker hub
+      run: docker push ${{ secrets.DOCKER_ID }}/pytorch_mask_detector:latest
