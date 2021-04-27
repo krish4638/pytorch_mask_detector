@@ -18,3 +18,5 @@ jobs:
       run: docker build . --file Dockerfile --tag ${{ secrets.DOCKER_ID }}/pytorch_mask_detector:latest
     - name: Push docker image to docker hub
       run: docker push ${{ secrets.DOCKER_ID }}/pytorch_mask_detector:latest
+      
+      
